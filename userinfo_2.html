@@ -1,0 +1,220 @@
+{% extends 'base/subjects_base.html' %}
+{% load static %}
+{% block title %} ALCPT測驗系統-學員專區 {% endblock%}
+{% block content %}
+<br>
+<div class="container w3-myfont">
+	<div class="container w3-myfont">
+		<div class="row">
+			<div class="col">
+				<div class="panel-body">
+					  <table class="w3-table-all">
+						<thead>
+						  <tr class="w3-light-grey w3-card-4">
+							<th>考試日期</th>
+							<th>考試成績</th>
+						  </tr>
+						</thead>
+						 {% for score in score %}
+						<tr class="w3-hover-green">
+						<td>{{ score.Exam_Date }}</td>
+						{% if score.Score > 59%}
+							<td>{{ score.Score }}</td>
+						{% else %}
+							<td><font color="red">{{score.Score}}</font></td>
+						</tr>
+					  	{% endif %}
+						{% endfor %}
+					</table>
+						<html>
+							<head>
+								<meta charset="utf-8"><link rel="icon" href="https://static.jianshukeji.com/highcharts/images/favicon.ico">
+								<meta name="viewport" content="width=device-width, initial-scale=1">
+								<script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+								<script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+								<script src="https://img.hcharts.cn/highcharts/modules/series-label.js"></script>
+								<script src="https://img.hcharts.cn/highcharts/modules/oldie.js"></script>
+								<script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+
+							</head>
+							<body>
+								<style type="text/css">
+									.button {
+										background-color: #4CAF50; /* Green */
+										border: none;
+										color: white;
+										padding: 8px 16px;
+										text-align: center;
+										text-decoration: none;
+										display: inline-block;
+										font-size: 16px;
+										margin: 4px 2px;
+										-webkit-transition-duration: 0.4s; /* Safari */
+										transition-duration: 0.4s;
+										cursor: pointer;
+									}
+
+									.button1{
+										background-color: white;
+										color: black;
+										border: 2px solid #008CBA;
+									}
+									.button1:hover{
+										background-color: #4CAF50;
+										color: white;
+									}
+									.button2{
+										background-color: white;
+										color: black;
+										border: 2px solid #008CBA;
+									}
+									.button2:hover{
+										background-color: #4CAF50;
+										color: white;
+									}
+								</style>
+								{% for List in List %}
+									<tr class="w3-hover-green">
+									<td>{{ List }}</td>
+									<td>{{test2}}</td>
+									</tr>
+								{% endfor %}
+								<br>
+								<tr>
+									<td><button class="button button1" onclick="getContainer()"><font size="5">折線圖</font></button></td>
+									<td><button class="button button2" onclick="getPie()"><font size ="5">圓餅圖</font></button></td>
+								</tr>
+
+								<div id="container" style="max-width:800px;height:400px"></div>
+								<script type="text/javascript">
+
+									Highcharts.setOptions({
+										lang:{
+										   downloadJPEG:"下载JPEG圖片",
+										   downloadPDF:"下载PDF文件",
+										   downloadPNG:"下载PNG文件",
+										   downloadSVG:"下载SVG文件",
+										   printChart:"列印圖表",
+
+										}
+									});
+									function getContainer() {
+										var test = {{test_final|safe}};
+										var chart = Highcharts.chart('container', {
+											title: {
+													text: 'ALCPT測驗成績分佈 (近十次)'
+											},
+											yAxis: {
+													max:100,
+													min:0,
+													title: {
+															text: '成績',
+
+													}
+											},
+											xAxis: {
+													type:'category', //linear線性  logarithmic對數 datetime category
+													title: {
+															text: '考試日期'
+													}
+											},
+											legend: {//在右側顯示的資料的角色是代表啥顏色
+													// layout: 'vertical',
+													align: 'right',
+													verticalAlign: 'bottom',
+													backgroundColor: '#FCFFC5'
+													// verticalAlign: 'center'
+											},
+											// tooltip: {
+											// 	pointFormat:'{series.data}'
+											// },
+											plotOptions: {
+													series: {
+															label: {
+																	connectorAllowed: false
+															},
+															pointStart: 1
+													}
+											},
+											series: [{
+													name: '1080630201',
+													data: test
+											 }],
+
+											responsive: {
+													rules: [{
+															condition: {
+																	maxWidth: 500
+															},
+															chartOptions: {
+																	legend: {
+																			layout: 'horizontal',
+																			align: 'left',
+																			verticalAlign: 'bottom'
+																	}
+															}
+													}]
+											}
+										});
+									}
+									</script>
+
+									<script>
+									function getPie() {
+									    // var total_test_num = {{total|safe}};
+										var a_test ={{a|safe}};
+										var b_test ={{b|safe}};
+										var test_test ={{test_|safe}};
+										//圓餅圖開始
+										alert("總共20題,共錯"+(a_test+b_test)+"題,\n聽力測驗錯"+a_test+"題,\n閱讀測驗錯"+b_test+"題.");
+
+										var chart_test = Highcharts.chart('container', {
+												chart: {
+														plotBackgroundColor: null,
+														plotBorderWidth: null,
+														plotShadow: false,
+														type: 'pie'
+												},
+												title: {
+														text: '試卷錯誤比率'
+												},
+												tooltip: {
+														pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+												},
+												plotOptions: {
+														pie: {
+																allowPointSelect: true,
+																cursor: 'pointer',
+																dataLabels: {
+																		enabled: true,
+																		format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+																		style: {
+																				color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+																		}
+																}
+														}
+												},
+												series: [{
+														name: 'Brands',
+														colorByPoint: true,
+														data: [{
+																name: '聽力測驗,錯 '+a_test+" 題",
+																y: a_test,
+																sliced: true,
+																selected: true
+														}, {
+																name: '閱讀測驗,錯 '+b_test+" 題",
+																y: b_test,
+														}]
+												}]
+										});
+                                    }
+								</script>
+							</body>
+						</html>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
