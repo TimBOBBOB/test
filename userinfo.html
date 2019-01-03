@@ -88,6 +88,16 @@
 								<div id="container" style="max-width:800px;height:400px"></div>
 								<script type="text/javascript">
 
+									Highcharts.setOptions({
+										lang:{
+										   downloadJPEG:"下载JPEG圖片",
+										   downloadPDF:"下载PDF文件",
+										   downloadPNG:"下载PNG文件",
+										   downloadSVG:"下载SVG文件",
+										   printChart:"列印圖表",
+
+										}
+									});
 									function getContainer() {
 										var test = {{test_final|safe}};
 										var chart = Highcharts.chart('container', {
@@ -151,10 +161,13 @@
 
 									<script>
 									function getPie() {
+									    // var total_test_num = {{total|safe}};
 										var a_test ={{a|safe}};
 										var b_test ={{b|safe}};
 										var test_test ={{test_|safe}};
 										//圓餅圖開始
+										alert("總共20題,共錯"+(a_test+b_test)+"題,\n聽力測驗錯"+a_test+"題,\n閱讀測驗錯"+b_test+"題.");
+
 										var chart_test = Highcharts.chart('container', {
 												chart: {
 														plotBackgroundColor: null,
@@ -185,12 +198,12 @@
 														name: 'Brands',
 														colorByPoint: true,
 														data: [{
-																name: '閱讀測驗',
+																name: '聽力測驗,錯 '+a_test+" 題",
 																y: a_test,
 																sliced: true,
 																selected: true
 														}, {
-																name: '聽力測驗',
+																name: '閱讀測驗,錯 '+b_test+" 題",
 																y: b_test,
 														}]
 												}]
